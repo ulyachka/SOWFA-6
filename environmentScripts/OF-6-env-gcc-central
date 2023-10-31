@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+        . ~/.bashrc
+fi
+
 OpenFOAM-6-gcc-central()
 {
    # MY
@@ -20,12 +25,17 @@ OpenFOAM-6-gcc-central()
    module purge
    #module use $spack_loc/spack/share/spack/modules/linux-centos7-x86_64/gcc-8.4.0
    module use $spack_loc/spack/share/spack/modules/linux-ubuntu18.04-x86_64_v4/gcc-8.4.0
-   module load gcc/8.4.0
-   module load openmpi/4.0.4
+
+   #module load gcc/8.4.0
+   # will be loaded by hdf5
+   #module load openmpi/4.0.4
+   #module load openmpi/4.1.5
    module load cgal/4.12
    module load boost/1.69.0
    # unable to buld
    #module load mpfr/4.0.1
+   #module load mpfr/4.0.2
+   #module load mpfr/4.1.1
    module load mpfr/4.2.0
    module load gmp/6.1.2
    module load scotch/6.0.6
@@ -35,14 +45,22 @@ OpenFOAM-6-gcc-central()
    module load hdf5/1.10.6
    module load openblas/0.3.5
    module load yaml-cpp/0.6.2
-   module load zlib/1.2.11
-   module load libxml2/2.9.8
-   module load cmake/3.13.3
+   #module load zlib/1.2.11
+   #module load zlib/1.3
+   #module load libxml2/2.9.8
+   # too old & incompatible with openfast 3.5.0
+   #module load cmake/3.13.3
+   module load cmake/3.27.6
    module load zoltan/3.83
+
+   # my crutch
+   #module unload gcc-8.4.0/mpich/4.1.2/mh62
+   module unload libxml2/2.9.8/cqcz
+#   module load gcc-8.4.0/openmpi/4.0.4/fhxg
+
    module list
 
    # Unset OpenFOAM environment variables.
-   # UNSUITABLE FOR OPENFOAM-6
    if [ -z "$FOAM_INST_DIR" ]; then
       echo "Nothing to unset..."
    else
@@ -63,14 +81,14 @@ OpenFOAM-6-gcc-central()
    export FOAMY_HEX_MESH=true
    
    # Source the OpenFOAM main environment.
-   foamDotFile=$FOAM_ETC/bashrc.gcc-openmpi
+   foamDotFile=$inst_loc/openfoam$OPENFOAM_VERSION/etc/bashrc
    if [ -f $foamDotFile ] ; then
       echo "Sourcing $foamDotFile..."
       source $foamDotFile
    fi
 
    # For wmake compiling.
-   export WM_NCOMPPROCS=16 # MY
+   export WM_NCOMPPROCS=16
    export WM_COLOURS="white blue green cyan red magenta yellow"
 
    # Alias to tutorials.
@@ -80,7 +98,9 @@ OpenFOAM-6-gcc-central()
    export SOWFA_DIR=$sowfa_loc/SOWFA-$OPENFOAM_VERSION
    export SOWFA_APPBIN=$SOWFA_DIR/platforms/$WM_OPTIONS/bin
    export SOWFA_LIBBIN=$SOWFA_DIR/platforms/$WM_OPTIONS/lib
-   export OPENFAST_DIR=$sowfa_loc/ThirdParty-$OPENFOAM_VERSION/openfast/install.gcc
+   # the code shows that OpenFAST 3.5.0 is supported (although it still depends on deprecated libs!)
+   export OPENFAST_DIR=$sowfa_loc/ThirdParty-$OPENFOAM_VERSION/openfast-3.5.0/install
+   #export OPENFAST_DIR=$sowfa_loc/ThirdParty-$OPENFOAM_VERSION/openfast-2.6.0/install
    export LD_LIBRARY_PATH=$SOWFA_LIBBIN:$OPENFAST_DIR/lib:$LD_LIBRARY_PATH
    export PATH=$SOWFA_APPBIN:$OPENFAST_DIR/bin:$PATH
 
