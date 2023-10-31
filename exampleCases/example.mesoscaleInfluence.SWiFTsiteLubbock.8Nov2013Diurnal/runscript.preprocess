@@ -30,6 +30,7 @@ refinementLevels=0              # If you want to refine the mesh locally for any
                                 # 0.
 
 
+set -x
 
 
 # Define some functions for mesh refinement.

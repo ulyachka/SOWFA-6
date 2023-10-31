@@ -13,35 +13,45 @@
 
 xMin                 0.0;                         // Minimum x-extent of domain (m).
 yMin                 0.0;                         // Minimum y-extent of domain (m).
-xMax                 3000.0;                      // Maximum x-extent of domain (m).
-yMax                 3000.0;                      // Maximum y-extent of domain (m).
+//xMax                 3000.0;                      // Maximum x-extent of domain (m).
+//yMax                 3000.0;                      // Maximum y-extent of domain (m).
+xMax                 1000.0;                      // Maximum x-extent of domain (m).
+yMax                 1000.0;                      // Maximum y-extent of domain (m).
 
 // Domain heights and number of cells (level 1).
 zMin                     0.0;                      // Minimum z-extent of domain (m).
 zMax1                  600.0;                      // Maximum z-extent of domain (m).
-nx1                      300;                      // Number of cells in x-direction.
-ny1                      300;                      // Number of cells in y-direction.
+//nx1                      300;                      // Number of cells in x-direction.
+//ny1                      300;                      // Number of cells in y-direction.
+nx1                      100;                      // Number of cells in x-direction.
+ny1                      100;                      // Number of cells in y-direction.
 nz1                       60;                      // Number of cells in z-direction.
 
 // Domain heights and number of cells (level 2).
 zMin2                  600.0;                      // Minimum z-extent of domain (m).
 zMax2                  700.0;                      // Maximum z-extent of domain (m).
-nx2                      300;                      // Number of cells in x-direction.
-ny2                      300;                      // Number of cells in y-direction.
+//nx2                      300;                      // Number of cells in x-direction.
+//ny2                      300;                      // Number of cells in y-direction.
+nx2                      100;                      // Number of cells in x-direction.
+ny2                      100;                      // Number of cells in y-direction.
 nz2                       10;                      // Number of cells in z-direction.
 
 // Domain heights and number of cells (level 3).
 zMin3                  700.0;                      // Minimum z-extent of domain (m).
 zMax3                  800.0;                      // Maximum z-extent of domain (m).
-nx3                      300;                      // Number of cells in x-direction.
-ny3                      300;                      // Number of cells in y-direction.
+//nx3                      300;                      // Number of cells in x-direction.
+//ny3                      300;                      // Number of cells in y-direction.
+nx3                      100;                      // Number of cells in x-direction.
+ny3                      100;                      // Number of cells in y-direction.
 nz3                       10;                      // Number of cells in z-direction.
 
 // Domain heights and number of cells (level 4).
 zMin4                  800.0;                      // Minimum z-extent of domain (m).
 zMax                  1000.0;                      // Maximum z-extent of domain (m).
-nx4                      300;                      // Number of cells in x-direction.
-ny4                      300;                      // Number of cells in y-direction.
+//nx4                      300;                      // Number of cells in x-direction.
+//ny4                      300;                      // Number of cells in y-direction.
+nx4                      100;                      // Number of cells in x-direction.
+ny4                      100;                      // Number of cells in y-direction.
 nz4                       20;                      // Number of cells in z-direction.
 
 
@@ -53,9 +63,9 @@ nz4                       20;                      // Number of cells in z-direc
 // - The common decomposistion algorithms are simple and scotch.
 //   Simple scales better for large problems on nice regular meshes,
 //   but scotch is geometrically general.
-nCores               144;                         // Number of cores on which to run this case.
+nCores               16;                         // Number of cores on which to run this case.
 decompType           scotch;                      // Decomposition algorithm.  "simple" and "scotch" are good choices.
-decompOrder          (6 6 6);                     // Order of the decomposition number of partitions in (x y z)-directions (only for simple).
+//decompOrder          (4 2 2);                     // Order of the decomposition number of partitions in (x y z)-directions (only for simple).
 
 
 

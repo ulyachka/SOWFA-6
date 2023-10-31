@@ -5,25 +5,29 @@
 #SBATCH --time=1:00:00
 #SBATCH --account=mmc
 
-source $HOME/.bash_profile
-cores=$SLURM_NTASKS
+set -x
 
-echo "Working directory is" $SLURM_SUBMIT_DIR
-echo "Job name is" $SLURM_JOB_NAME
-echo "Submit time is" $(squeue -u $USER -o '%30j %20V' | grep -e $SLURM_JOB_NAME | awk '{print $2}')
+source $HOME/.bash_profile
+#cores=$SLURM_NTASKS
+cores=$(foamDictionary -entry nCores -value setUp)
+
+#echo "Working directory is" $SLURM_SUBMIT_DIR
+#echo "Job name is" $SLURM_JOB_NAME
+#echo "Submit time is" $(squeue -u $USER -o '%30j %20V' | grep -e $SLURM_JOB_NAME | awk '{print $2}')
 echo "Starting OpenFOAM job at: " $(date)
 echo "using" $cores "core(s)"
 
 # ******************************************** USER INPUT ******************************************** #
-OpenFOAM-6-gcc-dev              # OpenFOAM/SOWFA version. OpenFOAM-6-{gcc,intel}-{central,dev}
+# MY: assume all the necessary enviroment is already set
+#OpenFOAM-6-gcc-central         # OpenFOAM/SOWFA version. OpenFOAM-6-{gcc,intel}-{central,dev}
 startTime=0                     # Start time
 stabState=neutral               # neutral, stable, unstable, wrf
 solver=superDeliciousVanilla
 # **************************************************************************************************** #
 
 # **************************************** PERFORM SOME CHECKS *************************************** #
-if [ ! -f system/controlDict.$solver ];           then echo "Job killed (1)"; scancel $SLURM_JOBID; fi
-if [ ! -f setUp.$stabState ];                     then echo "Job killed (2)"; scancel $SLURM_JOBID; fi
+#if [ ! -f system/controlDict.$solver ];           then echo "Job killed (1)"; scancel $SLURM_JOBID; fi
+#if [ ! -f setUp.$stabState ];                     then echo "Job killed (2)"; scancel $SLURM_JOBID; fi
 # **************************************************************************************************** #
 
 # ************************************** COPY APPROPRIATE FILES ************************************** #

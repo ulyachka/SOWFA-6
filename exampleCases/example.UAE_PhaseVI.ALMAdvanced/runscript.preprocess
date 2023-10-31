@@ -24,7 +24,7 @@ cores=1                         # Enter the number of cores you will preprocess 
 
 
 
-
+set -x
 
 
 # Define some functions for mesh refinement.

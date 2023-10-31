@@ -7,17 +7,20 @@
 #SBATCH --mail-user=registhedin@gmail.com
 #SBATCH --mail-type=ALL
 
-source $HOME/.bash_profile
-cores=$SLURM_NTASKS
+#set -x
 
-echo "Working directory is" $SLURM_SUBMIT_DIR
-echo "Job name is" $SLURM_JOB_NAME
-echo "Submit time is" $(squeue -u $USER -o '%30j %20V' | grep -e $SLURM_JOB_NAME | awk '{print $2}')
+source $HOME/.bash_profile
+#cores=$SLURM_NTASKS
+cores=$(foamDictionary -entry nCores -value setUp)
+
+#echo "Working directory is" $SLURM_SUBMIT_DIR
+#echo "Job name is" $SLURM_JOB_NAME
+#echo "Submit time is" $(squeue -u $USER -o '%30j %20V' | grep -e $SLURM_JOB_NAME | awk '{print $2}')
 echo "Starting OpenFOAM job at: " $(date)
 echo "using" $cores "core(s)"
 
 # ******************************************** USER INPUT ******************************************** #
-OpenFOAM-6-gcc-dev              # OpenFOAM/SOWFA version. OpenFOAM-6-{gcc,intel}-{central,dev}
+#OpenFOAM-6-gcc-dev              # OpenFOAM/SOWFA version. OpenFOAM-6-{gcc,intel}-{central,dev}
 startTime=0                     # Start time (DO NOT change for restarted runs)
 writeIntervalBeforeBdData=5000  # Averages computation starts with "BdData" times
 endTimeBeforeBdData=20000
@@ -29,11 +32,11 @@ initializer=setFieldsABL
 # **************************************************************************************************** #
 
 # **************************************** PERFORM SOME CHECKS *************************************** #
-if [ ! -f foam1preprocess.log ];                                        then echo "Job killed (1)"; scancel $SLURM_JOBID; fi
-if [ ! -f system/controlDict.$solver ];                                 then echo "Job killed (2)"; scancel $SLURM_JOBID; fi
-if [ $initializer = setFieldsABL ] && [ ! -f system/setFieldsABLDict ]; then echo "Job killed (3)"; scancel $SLURM_JOBID; fi
-if [ ! -f setUp ];                                                      then echo "Job killed (4)"; scancel $SLURM_JOBID; fi
-if [ ! -f system/sampling/boundaryData ];                               then echo "Job killed (5)"; scancel $SLURM_JOBID; fi
+#if [ ! -f foam1preprocess.log ];                                        then echo "Job killed (1)"; scancel $SLURM_JOBID; fi
+#if [ ! -f system/controlDict.$solver ];                                 then echo "Job killed (2)"; scancel $SLURM_JOBID; fi
+#if [ $initializer = setFieldsABL ] && [ ! -f system/setFieldsABLDict ]; then echo "Job killed (3)"; scancel $SLURM_JOBID; fi
+#if [ ! -f setUp ];                                                      then echo "Job killed (4)"; scancel $SLURM_JOBID; fi
+#if [ ! -f system/sampling/boundaryData ];                               then echo "Job killed (5)"; scancel $SLURM_JOBID; fi
 
 if [ $(echo "($endTimeBeforeBdData-$startTime)%$writeIntervalBeforeBdData" | bc) -ne 0 ]; then touch  "WARNING_1"; fi
 if [ $(echo "($endTimeBdData-$startTimeBdData)%$writeIntervalBdData" | bc) -ne 0 ];       then touch  "WARNING_2"; fi
@@ -52,8 +55,9 @@ else
 fi
 
 # Run the flow field initializer
-if [ $initializer = setFieldsABL ] && [ ! -f log.2.$initializer ];  then
-   srun -n $cores --cpu_bind=cores $initializer -parallel > log.2.$initializer 2>&1
+if [ $initializer = setFieldsABL ] && [ ! -f log.2.$initializer ]; then
+   #srun -n $cores --cpu_bind=cores $initializer -parallel > log.2.$initializer 2>&1
+   mpirun -np $cores $initializer -parallel > log.2.$initializer 2>&1
 fi
 
 # Split run to get to developed-flow stage
@@ -63,7 +67,10 @@ if [ $latestTime -lt $endTimeBeforeBdData ]; then
     foamDictionary -entry "startTime" -set $latestTime -disableFunctionEntries system/controlDict
     foamDictionary -entry "endTime" -set $endTimeBeforeBdData -disableFunctionEntries system/controlDict
     foamDictionary -entry "writeInterval" -set $writeIntervalBeforeBdData -disableFunctionEntries system/controlDict
-    srun -n $cores --cpu_bind=cores $solver -parallel > log.2.$solver.startAt$latestTime 2>&1
+    #srun -n $cores --cpu_bind=cores $solver -parallel > log.2.$solver.startAt$latestTime 2>&1
+    mpirun -np $cores $solver -parallel > log.2.$solver.startAt$latestTime 2>&1
+    # DEBUG
+    #$solver > log.2.$solver.startAt$latestTime 2>&1
 fi
 
 # Make the precursor data ready for future mapping 
@@ -88,7 +95,8 @@ foamDictionary -entry "boundaryData.enabled"       -set "true" system/sampling/b
 foamDictionary -entry "startTime" -set $continueTime -disableFunctionEntries system/controlDict
 foamDictionary -entry "endTime" -set $endTimeBdData -disableFunctionEntries system/controlDict
 foamDictionary -entry "writeInterval" -set $writeIntervalBdData -disableFunctionEntries system/controlDict
-srun -n $cores --cpu_bind=cores $solver -parallel > log.2.$solver.saveBdData.startAt$continueTime 2>&1
+#srun -n $cores --cpu_bind=cores $solver -parallel > log.2.$solver.saveBdData.startAt$continueTime 2>&1
+mpirun -np $cores $solver -parallel > log.2.$solver.saveBdData.startAt$continueTime 2>&1
 
 # Adjust the initial time of boundaryData if it hasn't been adjusted yet
 if [ ! -d postProcessing/boundaryData/north/$startTimeBdData ]; then

@@ -18,11 +18,12 @@ EXE_INC = \
     $(PFLAGS) \
     $(PINC) \
     -I$(OPENFAST_DIR)/include \
-    -I$(HDF5_DIR)/include/
+    -I$(HDF5_ROOT_DIR)/include/
 
 
 EXE_LIBS = \
     -L$(SOWFA_LIBBIN) \
+    -L$(OPENFAST_DIR)/lib/ \
     -lturbulenceModels \
     -lincompressibleTurbulenceModels \
     -lincompressibleTransportModels \
@@ -48,21 +49,19 @@ EXE_LIBS = \
     -licefloelib \
     -lifwlib \
     -lmaplib \
-    -lmapcpplib \
     -lmoordynlib \
     -lnwtclibs \
     -lopenfastcpplib \
     -lopenfastlib \
     -lopenfast_postlib \
     -lopenfast_prelib \
-    -lopenfoamtypeslib \
     -lorcaflexlib \
     -lscfastlib \
     -lsctypeslib \
     -lservodynlib \
     -lsubdynlib \
     $(BLASLIB) \
-    -L$(HDF5_DIR)/lib/ \
+    -L$(HDF5_ROOT_DIR)/lib/ \
     -lhdf5_hl \
     -lhdf5
 

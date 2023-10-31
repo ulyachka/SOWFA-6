@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -x
 
 # Custom miscellaneous tools
 wmake src/miscTools
@@ -15,7 +16,7 @@ wmake src/boundaryConditions
 
 
 # Standard actuator turbine models
-#wmake src/turbineModels/turbineModelsStandard
+wmake src/turbineModels/turbineModelsStandard
 
 
 # OpenFAST-coupled actuator turbine models
