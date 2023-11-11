@@ -63,6 +63,7 @@ int main(int argc, char *argv[])
     #include "createMesh.H"
     #include "createControl.H"
     #include "createFields.H"
+    #include "createDivSchemeBlendingField.H" // MY
     #include "createTimeControls.H"
     #include "CourantNo.H"
     #include "setInitialDeltaT.H"
@@ -85,6 +86,8 @@ int main(int argc, char *argv[])
         word timeNameOld = runTime.timeName();
 
         runTime++;
+
+        Info << "MY DEBUG" << endl;
 
         Info << "Time Step = " << runTime.timeIndex() << ", ";
         Info << "Time = " << timeNameOld << " to " << runTime.timeName() << " s";

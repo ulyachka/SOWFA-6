@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -x
+#set -x
 
 # Custom miscellaneous tools
 wmake src/miscTools

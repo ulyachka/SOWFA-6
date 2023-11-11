@@ -23,40 +23,51 @@ OpenFOAM-6-gcc-central()
    # Load the right modules.
    echo "Purging and loading modules..."
    module purge
+
+   module unuse ${MODULEPATH}
+
    #module use $spack_loc/spack/share/spack/modules/linux-centos7-x86_64/gcc-8.4.0
    module use $spack_loc/spack/share/spack/modules/linux-ubuntu18.04-x86_64_v4/gcc-8.4.0
+   module load gcc-8.4.0/hdf5/1.10.6
+   module load gcc-8.4.0/cgal/4.13/f4oz
+   module load gcc-8.4.0/parmetis/4.0.3/v4xf
+   module load gcc-8.4.0/openblas/0.3.24/bxdy
+   module load gcc-8.4.0/yaml-cpp/0.6.3/nber
+   module load gcc-8.4.0/ccache/4.8.2/ii62 
 
-   #module load gcc/8.4.0
-   # will be loaded by hdf5
-   #module load openmpi/4.0.4
-   #module load openmpi/4.1.5
-   module load cgal/4.12
-   module load boost/1.69.0
-   # unable to buld
-   #module load mpfr/4.0.1
-   #module load mpfr/4.0.2
-   #module load mpfr/4.1.1
-   module load mpfr/4.2.0
-   module load gmp/6.1.2
-   module load scotch/6.0.6
-   module load metis/5.1.0
-   module load parmetis/4.0.3
-   module load flex/2.6.3
-   module load hdf5/1.10.6
-   module load openblas/0.3.5
-   module load yaml-cpp/0.6.2
-   #module load zlib/1.2.11
-   #module load zlib/1.3
-   #module load libxml2/2.9.8
-   # too old & incompatible with openfast 3.5.0
-   #module load cmake/3.13.3
-   module load cmake/3.27.6
-   module load zoltan/3.83
 
-   # my crutch
-   #module unload gcc-8.4.0/mpich/4.1.2/mh62
-   module unload libxml2/2.9.8/cqcz
-#   module load gcc-8.4.0/openmpi/4.0.4/fhxg
+# obsolete below
+#   #module load gcc/8.4.0
+#   # will be loaded by hdf5
+#   #module load openmpi/4.0.4
+#   #module load openmpi/4.1.5
+#   module load cgal/4.12
+#   module load boost/1.69.0
+#   # unable to buld
+#   #module load mpfr/4.0.1
+#   #module load mpfr/4.0.2
+#   #module load mpfr/4.1.1
+#   module load mpfr/4.2.0
+#   module load gmp/6.1.2
+#   module load scotch/6.0.6
+#   module load metis/5.1.0
+#   module load parmetis/4.0.3
+#   module load flex/2.6.3
+#   module load hdf5/1.10.6
+#   module load openblas/0.3.5
+#   module load yaml-cpp/0.6.2
+#   #module load zlib/1.2.11
+#   #module load zlib/1.3
+#   #module load libxml2/2.9.8
+#   # too old & incompatible with openfast 3.5.0
+#   #module load cmake/3.13.3
+#   module load cmake/3.27.6
+#   module load zoltan/3.83
+#
+#   # my crutch
+#   #module unload gcc-8.4.0/mpich/4.1.2/mh62
+#   module unload libxml2/2.9.8/cqcz
+##   module load gcc-8.4.0/openmpi/4.0.4/fhxg
 
    module list
 
@@ -98,9 +109,13 @@ OpenFOAM-6-gcc-central()
    export SOWFA_DIR=$sowfa_loc/SOWFA-$OPENFOAM_VERSION
    export SOWFA_APPBIN=$SOWFA_DIR/platforms/$WM_OPTIONS/bin
    export SOWFA_LIBBIN=$SOWFA_DIR/platforms/$WM_OPTIONS/lib
-   # the code shows that OpenFAST 3.5.0 is supported (although it still depends on deprecated libs!)
+
+   # the SOWFA code hints that the OpenFAST 3.5.0 is supported;
+   # although it depends on deprecated OpenFAST libs in its Makefiles,
+   # which is, actually, looks like an errata
    export OPENFAST_DIR=$sowfa_loc/ThirdParty-$OPENFOAM_VERSION/openfast-3.5.0/install
    #export OPENFAST_DIR=$sowfa_loc/ThirdParty-$OPENFOAM_VERSION/openfast-2.6.0/install
+
    export LD_LIBRARY_PATH=$SOWFA_LIBBIN:$OPENFAST_DIR/lib:$LD_LIBRARY_PATH
    export PATH=$SOWFA_APPBIN:$OPENFAST_DIR/bin:$PATH
 

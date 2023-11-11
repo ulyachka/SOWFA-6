@@ -4,9 +4,11 @@
 
 # install dependencies for OpenFOAM-6
 #nice spack install --only dependencies openfoam-org@6 +int64 +metis %intel@18.0.4
-spack install --only dependencies openfoam-org@6 +int64 +metis
+spack install --only dependencies openfoam-org@6 +int64 +metis ^openmpi@2.1.1
+
 # install parmetis
-spack install parmetis@4.0.3 +int64 +shared
+spack install parmetis@4.0.3 +int64 +shared ^openmpi@2.1.1
+
 # install CGAL (includes dependencies: boost, gmp, mpfr)
 spack install cgal@4.13
 
@@ -15,20 +17,26 @@ spack install cgal@4.13
 #spack install hdf5@1.10.6 +cxx +fortran +hl -mpi +pic +shared +szip
 #spack install hdf5@1.10.6 +cxx +fortran +hl -mpi +shared +szip
 
-spack install hdf5@1.10.6 +cxx +fortran +hl ~ipo ~java -mpi +shared +szip +threadsafe +tool
+#spack install hdf5@1.10.6 +cxx +fortran +hl -ipo -java -mpi +shared +szip +threadsafe +tool ^openmpi@2.1.1
+spack install hdf5@1.10.6 +cxx +fortran +hl -ipo -java -mpi +shared +szip +threadsafe ^openmpi@2.1.1
 
 # it will fail on build and require to crutch-patch two C headers,
 # watch the build messages...
-spack install libxml2@2.9.10 +python 
+#spack install libxml2@2.9.10 +python 
+
+# XXX: won't fail?
+spack install libxml2@2.9.14 +python 
 
 spack install yaml-cpp@0.6.3
 
 # not found, but newer version should not hurt
 #spack install zlib@1.2.11
-spack install zlib@1.3
+spack install zlib@1.2.13
+#spack install zlib@1.3
 
 return
 
+# XXX: obsolete,
 # all requirements mentoined in SOWFA enviroment script
 spack install openmpi@4.0.4
 spack install cgal@4.12
